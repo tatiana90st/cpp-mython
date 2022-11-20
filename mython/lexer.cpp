@@ -1,4 +1,4 @@
-#include "lexer.h"
+п»ї#include "lexer.h"
 
 #include <algorithm>
 #include <charconv>
@@ -340,7 +340,7 @@ Token Lexer::NextToken() {
                 curr_token_ = NextToken();
             }
 
-            //строки
+            //СЃС‚СЂРѕРєРё
             else if (c == '"') {
                 c = input_.get();
                 curr_token_ = LoadString(input_);
@@ -350,7 +350,7 @@ Token Lexer::NextToken() {
                 curr_token_ = LoadSingleQuotedString(input_);
             }
 
-            //числа
+            //С‡РёСЃР»Р°
             else if (std::isdigit(c)) {
                 curr_token_ = LoadNumber(input_);
             }
@@ -385,7 +385,7 @@ Token Lexer::NextToken() {
                 }
             }
             else if (c == ' ') {
-                //пробелы в середине строки
+                //РїСЂРѕР±РµР»С‹ РІ СЃРµСЂРµРґРёРЅРµ СЃС‚СЂРѕРєРё
                 if (!curr_token_.Is<token_type::Newline>() && !curr_token_.Is<token_type::Dedent>()) {
                     while (input_.peek() == ' ') {
                         c = input_.get();

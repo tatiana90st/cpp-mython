@@ -1,4 +1,4 @@
-#include "statement.h"
+п»ї#include "statement.h"
 
 #include <iostream>
 #include <sstream>
@@ -52,7 +52,7 @@ ObjectHolder VariableValue::Execute(Closure& closure, Context& context) {
                 return VariableValue(dotted_ids_).Execute(class_inst_ptr_->Fields(), context);
             }
             else {
-                //throw something at me?
+                //throw something?
             }
         }
         return obj;
@@ -62,10 +62,6 @@ ObjectHolder VariableValue::Execute(Closure& closure, Context& context) {
     }
 }
 
-//why??? why????
-//ah, ok
-//i can turn it into args_
-//but still - why???
 unique_ptr<Print> Print::Variable(const std::string& name) {
     return std::make_unique<Print>(std::make_unique<VariableValue>(name));
 }
@@ -128,7 +124,7 @@ ObjectHolder Stringify::Execute(Closure& closure, Context& context) {
     if (object) {
         std::ostringstream to_string;
         object->Print(to_string, context);
-        return ObjectHolder::Own(runtime::String(to_string.str())); //easy, isnt't it?   
+        return ObjectHolder::Own(runtime::String(to_string.str()));
         //ObjectHolder<-Object::String<-stream to string<-Print to stream<-ObjectHolder<-Execute<-unique_ptr<-Statement==Executable
     }
     else {
@@ -228,19 +224,14 @@ FieldAssignment::FieldAssignment(VariableValue object, std::string field_name,
 }
 
 ObjectHolder FieldAssignment::Execute(Closure& closure, Context& context) {
-    
-    //получить объект
     runtime::ObjectHolder obj = object_.Execute(closure, context);
-    //должен быть классом
     auto class_inst_ptr_ = obj.TryAs<runtime::ClassInstance>();
-    //добавить ему поле
     if (class_inst_ptr_) {
         class_inst_ptr_->Fields()[field_name_] = rv_.get()->Execute(closure, context);
     }
     else {
         //may be throw exeption?
     }
-    //stay sane
     return class_inst_ptr_->Fields().at(field_name_);
 }
 
@@ -313,7 +304,7 @@ ObjectHolder Not::Execute(Closure& closure, Context& context) {
 
 Comparison::Comparison(Comparator cmp, unique_ptr<Statement> lhs, unique_ptr<Statement> rhs)
     : BinaryOperation(std::move(lhs), std::move(rhs)) 
-    , comp_(std::move(cmp))//lets just move everything 
+    , comp_(std::move(cmp))
 {
 }
 
@@ -350,9 +341,6 @@ MethodBody::MethodBody(std::unique_ptr<Statement>&& body)
 {
 }
 
-/*Чтобы реализовать в интерпретаторе инструкцию return, выбросьте исключение в методе Return::Execute и поймайте его в MethodBody::Execute. 
-//Брошенное исключение должно нести информацию о возвращаемом значении метода.
-Если метод завершился без выбрасывания исключения, результат его работы — значение None.*/
 ObjectHolder MethodBody::Execute(Closure& closure, Context& context) {
     try {
         body_.get()->Execute(closure, context);

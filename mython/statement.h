@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include "runtime.h"
 
@@ -8,8 +8,8 @@ namespace ast {
 
 using Statement = runtime::Executable;
 
-// Выражение, возвращающее значение типа T,
-// используется как основа для создания констант
+// Р’С‹СЂР°Р¶РµРЅРёРµ, РІРѕР·РІСЂР°С‰Р°СЋС‰РµРµ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° T,
+// РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєР°Рє РѕСЃРЅРѕРІР° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РєРѕРЅСЃС‚Р°РЅС‚
 template <typename T>
 class ValueStatement : public Statement {
 public:
@@ -31,8 +31,8 @@ using StringConst = ValueStatement<runtime::String>;
 using BoolConst = ValueStatement<runtime::Bool>;
 
 /*
-Вычисляет значение переменной либо цепочки вызовов полей объектов id1.id2.id3.
-Например, выражение circle.center.x - цепочка вызовов полей объектов в инструкции:
+Р’С‹С‡РёСЃР»СЏРµС‚ Р·РЅР°С‡РµРЅРёРµ РїРµСЂРµРјРµРЅРЅРѕР№ Р»РёР±Рѕ С†РµРїРѕС‡РєРё РІС‹Р·РѕРІРѕРІ РїРѕР»РµР№ РѕР±СЉРµРєС‚РѕРІ id1.id2.id3.
+РќР°РїСЂРёРјРµСЂ, РІС‹СЂР°Р¶РµРЅРёРµ circle.center.x - С†РµРїРѕС‡РєР° РІС‹Р·РѕРІРѕРІ РїРѕР»РµР№ РѕР±СЉРµРєС‚РѕРІ РІ РёРЅСЃС‚СЂСѓРєС†РёРё:
 x = circle.center.x
 */
 class VariableValue : public Statement {
@@ -47,7 +47,7 @@ private:
     std::vector<std::string> dotted_ids_;
 };
 
-// Присваивает переменной, имя которой задано в параметре var, значение выражения rv
+// РџСЂРёСЃРІР°РёРІР°РµС‚ РїРµСЂРµРјРµРЅРЅРѕР№, РёРјСЏ РєРѕС‚РѕСЂРѕР№ Р·Р°РґР°РЅРѕ РІ РїР°СЂР°РјРµС‚СЂРµ var, Р·РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ rv
 class Assignment : public Statement {
 public:
     Assignment(std::string var, std::unique_ptr<Statement> rv);
@@ -58,7 +58,7 @@ private:
     std::unique_ptr<Statement>rv_ = nullptr;
 };
 
-// Присваивает полю object.field_name значение выражения rv
+// РџСЂРёСЃРІР°РёРІР°РµС‚ РїРѕР»СЋ object.field_name Р·РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёСЏ rv
 class FieldAssignment : public Statement {
 public:
     FieldAssignment(VariableValue object, std::string field_name, std::unique_ptr<Statement> rv);
@@ -70,7 +70,7 @@ private:
     std::unique_ptr<Statement> rv_;
 };
 
-// Значение None
+// Р—РЅР°С‡РµРЅРёРµ None
 class None : public Statement {
 public:
     runtime::ObjectHolder Execute([[maybe_unused]] runtime::Closure& closure,
@@ -79,18 +79,18 @@ public:
     }
 };
 
-// Команда print
+// РљРѕРјР°РЅРґР° print
 class Print : public Statement {
 public:
-    // Инициализирует команду print для вывода значения выражения argument
+    // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РєРѕРјР°РЅРґСѓ print РґР»СЏ РІС‹РІРѕРґР° Р·РЅР°С‡РµРЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ argument
     explicit Print(std::unique_ptr<Statement> argument);
-    // Инициализирует команду print для вывода списка значений args
+    // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РєРѕРјР°РЅРґСѓ print РґР»СЏ РІС‹РІРѕРґР° СЃРїРёСЃРєР° Р·РЅР°С‡РµРЅРёР№ args
     explicit Print(std::vector<std::unique_ptr<Statement>> args);
 
-    // Инициализирует команду print для вывода значения переменной name
+    // РРЅРёС†РёР°Р»РёР·РёСЂСѓРµС‚ РєРѕРјР°РЅРґСѓ print РґР»СЏ РІС‹РІРѕРґР° Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№ name
     static std::unique_ptr<Print> Variable(const std::string& name);
 
-    // Во время выполнения команды print вывод должен осуществляться в поток, возвращаемый из
+    // Р’Рѕ РІСЂРµРјСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ РєРѕРјР°РЅРґС‹ print РІС‹РІРѕРґ РґРѕР»Р¶РµРЅ РѕСЃСѓС‰РµСЃС‚РІР»СЏС‚СЊСЃСЏ РІ РїРѕС‚РѕРє, РІРѕР·РІСЂР°С‰Р°РµРјС‹Р№ РёР·
     // context.GetOutputStream()
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 
@@ -99,7 +99,7 @@ private:
     
 };
 
-// Вызывает метод object.method со списком параметров args
+// Р’С‹Р·С‹РІР°РµС‚ РјРµС‚РѕРґ object.method СЃРѕ СЃРїРёСЃРєРѕРј РїР°СЂР°РјРµС‚СЂРѕРІ args
 class MethodCall : public Statement {
 public:
     MethodCall(std::unique_ptr<Statement> object, std::string method,
@@ -113,23 +113,23 @@ private:
 };
 
 /*
-Создаёт новый экземпляр класса class_, передавая его конструктору набор параметров args.
-Если в классе отсутствует метод __init__ с заданным количеством аргументов,
-то экземпляр класса создаётся без вызова конструктора (поля объекта не будут проинициализированы):
+РЎРѕР·РґР°С‘С‚ РЅРѕРІС‹Р№ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР° class_, РїРµСЂРµРґР°РІР°СЏ РµРіРѕ РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂСѓ РЅР°Р±РѕСЂ РїР°СЂР°РјРµС‚СЂРѕРІ args.
+Р•СЃР»Рё РІ РєР»Р°СЃСЃРµ РѕС‚СЃСѓС‚СЃС‚РІСѓРµС‚ РјРµС‚РѕРґ __init__ СЃ Р·Р°РґР°РЅРЅС‹Рј РєРѕР»РёС‡РµСЃС‚РІРѕРј Р°СЂРіСѓРјРµРЅС‚РѕРІ,
+С‚Рѕ СЌРєР·РµРјРїР»СЏСЂ РєР»Р°СЃСЃР° СЃРѕР·РґР°С‘С‚СЃСЏ Р±РµР· РІС‹Р·РѕРІР° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° (РїРѕР»СЏ РѕР±СЉРµРєС‚Р° РЅРµ Р±СѓРґСѓС‚ РїСЂРѕРёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅС‹):
 
 class Person:
   def set_name(name):
     self.name = name
 
 p = Person()
-# Поле name будет иметь значение только после вызова метода set_name
+# РџРѕР»Рµ name Р±СѓРґРµС‚ РёРјРµС‚СЊ Р·РЅР°С‡РµРЅРёРµ С‚РѕР»СЊРєРѕ РїРѕСЃР»Рµ РІС‹Р·РѕРІР° РјРµС‚РѕРґР° set_name
 p.set_name("Ivan")
 */
 class NewInstance : public Statement {
 public:
     explicit NewInstance(const runtime::Class& class_);
     NewInstance(const runtime::Class& class_, std::vector<std::unique_ptr<Statement>> args);
-    // Возвращает объект, содержащий значение типа ClassInstance
+    // Р’РѕР·РІСЂР°С‰Р°РµС‚ РѕР±СЉРµРєС‚, СЃРѕРґРµСЂР¶Р°С‰РёР№ Р·РЅР°С‡РµРЅРёРµ С‚РёРїР° ClassInstance
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 
 private:
@@ -137,7 +137,7 @@ private:
     std::vector<std::unique_ptr<Statement>> args_;
 };
 
-// Базовый класс для унарных операций
+// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ РґР»СЏ СѓРЅР°СЂРЅС‹С… РѕРїРµСЂР°С†РёР№
 class UnaryOperation : public Statement {
 public:
     explicit UnaryOperation(std::unique_ptr<Statement> argument) 
@@ -149,14 +149,14 @@ protected:
     std::unique_ptr<Statement> argument_;
 };
 
-// Операция str, возвращающая строковое значение своего аргумента
+// РћРїРµСЂР°С†РёСЏ str, РІРѕР·РІСЂР°С‰Р°СЋС‰Р°СЏ СЃС‚СЂРѕРєРѕРІРѕРµ Р·РЅР°С‡РµРЅРёРµ СЃРІРѕРµРіРѕ Р°СЂРіСѓРјРµРЅС‚Р°
 class Stringify : public UnaryOperation {
 public:
     using UnaryOperation::UnaryOperation;
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Родительский класс Бинарная операция с аргументами lhs и rhs
+// Р РѕРґРёС‚РµР»СЊСЃРєРёР№ РєР»Р°СЃСЃ Р‘РёРЅР°СЂРЅР°СЏ РѕРїРµСЂР°С†РёСЏ СЃ Р°СЂРіСѓРјРµРЅС‚Р°РјРё lhs Рё rhs
 class BinaryOperation : public Statement {
 public:
     BinaryOperation(std::unique_ptr<Statement> lhs, std::unique_ptr<Statement> rhs) 
@@ -169,94 +169,94 @@ protected:
     std::unique_ptr<Statement> rhs_;
 };
 
-// Возвращает результат операции + над аргументами lhs и rhs
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РѕРїРµСЂР°С†РёРё + РЅР°Рґ Р°СЂРіСѓРјРµРЅС‚Р°РјРё lhs Рё rhs
 class Add : public BinaryOperation {
 public:
     using BinaryOperation::BinaryOperation;
 
-    // Поддерживается сложение:
-    //  число + число
-    //  строка + строка
-    //  объект1 + объект2, если у объект1 - пользовательский класс с методом _add__(rhs)
-    // В противном случае при вычислении выбрасывается runtime_error
+    // РџРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ СЃР»РѕР¶РµРЅРёРµ:
+    //  С‡РёСЃР»Рѕ + С‡РёСЃР»Рѕ
+    //  СЃС‚СЂРѕРєР° + СЃС‚СЂРѕРєР°
+    //  РѕР±СЉРµРєС‚1 + РѕР±СЉРµРєС‚2, РµСЃР»Рё Сѓ РѕР±СЉРµРєС‚1 - РїРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ РєР»Р°СЃСЃ СЃ РјРµС‚РѕРґРѕРј _add__(rhs)
+    // Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ РїСЂРё РІС‹С‡РёСЃР»РµРЅРёРё РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ runtime_error
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Возвращает результат вычитания аргументов lhs и rhs
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёС‚Р°РЅРёСЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ lhs Рё rhs
 class Sub : public BinaryOperation {
 public:
     using BinaryOperation::BinaryOperation;
 
-    // Поддерживается вычитание:
-    //  число - число
-    // Если lhs и rhs - не числа, выбрасывается исключение runtime_error
+    // РџРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РІС‹С‡РёС‚Р°РЅРёРµ:
+    //  С‡РёСЃР»Рѕ - С‡РёСЃР»Рѕ
+    // Р•СЃР»Рё lhs Рё rhs - РЅРµ С‡РёСЃР»Р°, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ runtime_error
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Возвращает результат умножения аргументов lhs и rhs
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ СѓРјРЅРѕР¶РµРЅРёСЏ Р°СЂРіСѓРјРµРЅС‚РѕРІ lhs Рё rhs
 class Mult : public BinaryOperation {
 public:
     using BinaryOperation::BinaryOperation;
 
-    // Поддерживается умножение:
-    //  число * число
-    // Если lhs и rhs - не числа, выбрасывается исключение runtime_error
+    // РџРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ СѓРјРЅРѕР¶РµРЅРёРµ:
+    //  С‡РёСЃР»Рѕ * С‡РёСЃР»Рѕ
+    // Р•СЃР»Рё lhs Рё rhs - РЅРµ С‡РёСЃР»Р°, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ runtime_error
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Возвращает результат деления lhs и rhs
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РґРµР»РµРЅРёСЏ lhs Рё rhs
 class Div : public BinaryOperation {
 public:
     using BinaryOperation::BinaryOperation;
 
-    // Поддерживается деление:
-    //  число / число
-    // Если lhs и rhs - не числа, выбрасывается исключение runtime_error
-    // Если rhs равен 0, выбрасывается исключение runtime_error
+    // РџРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ РґРµР»РµРЅРёРµ:
+    //  С‡РёСЃР»Рѕ / С‡РёСЃР»Рѕ
+    // Р•СЃР»Рё lhs Рё rhs - РЅРµ С‡РёСЃР»Р°, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ runtime_error
+    // Р•СЃР»Рё rhs СЂР°РІРµРЅ 0, РІС‹Р±СЂР°СЃС‹РІР°РµС‚СЃСЏ РёСЃРєР»СЋС‡РµРЅРёРµ runtime_error
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Возвращает результат вычисления логической операции or над lhs и rhs
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ Р»РѕРіРёС‡РµСЃРєРѕР№ РѕРїРµСЂР°С†РёРё or РЅР°Рґ lhs Рё rhs
 class Or : public BinaryOperation {
 public:
     using BinaryOperation::BinaryOperation;
-    // Значение аргумента rhs вычисляется, только если значение lhs
-    // после приведения к Bool равно False
+    // Р—РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р° rhs РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ, С‚РѕР»СЊРєРѕ РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ lhs
+    // РїРѕСЃР»Рµ РїСЂРёРІРµРґРµРЅРёСЏ Рє Bool СЂР°РІРЅРѕ False
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Возвращает результат вычисления логической операции and над lhs и rhs
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ Р»РѕРіРёС‡РµСЃРєРѕР№ РѕРїРµСЂР°С†РёРё and РЅР°Рґ lhs Рё rhs
 class And : public BinaryOperation {
 public:
     using BinaryOperation::BinaryOperation;
-    // Значение аргумента rhs вычисляется, только если значение lhs
-    // после приведения к Bool равно True
+    // Р—РЅР°С‡РµРЅРёРµ Р°СЂРіСѓРјРµРЅС‚Р° rhs РІС‹С‡РёСЃР»СЏРµС‚СЃСЏ, С‚РѕР»СЊРєРѕ РµСЃР»Рё Р·РЅР°С‡РµРЅРёРµ lhs
+    // РїРѕСЃР»Рµ РїСЂРёРІРµРґРµРЅРёСЏ Рє Bool СЂР°РІРЅРѕ True
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Возвращает результат вычисления логической операции not над единственным аргументом операции
+// Р’РѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ Р»РѕРіРёС‡РµСЃРєРѕР№ РѕРїРµСЂР°С†РёРё not РЅР°Рґ РµРґРёРЅСЃС‚РІРµРЅРЅС‹Рј Р°СЂРіСѓРјРµРЅС‚РѕРј РѕРїРµСЂР°С†РёРё
 class Not : public UnaryOperation {
 public:
     using UnaryOperation::UnaryOperation;
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 };
 
-// Составная инструкция (например: тело метода, содержимое ветки if, либо else)
+// РЎРѕСЃС‚Р°РІРЅР°СЏ РёРЅСЃС‚СЂСѓРєС†РёСЏ (РЅР°РїСЂРёРјРµСЂ: С‚РµР»Рѕ РјРµС‚РѕРґР°, СЃРѕРґРµСЂР¶РёРјРѕРµ РІРµС‚РєРё if, Р»РёР±Рѕ else)
 class Compound : public Statement {
 public:
-    // Конструирует Compound из нескольких инструкций типа unique_ptr<Statement>
+    // РљРѕРЅСЃС‚СЂСѓРёСЂСѓРµС‚ Compound РёР· РЅРµСЃРєРѕР»СЊРєРёС… РёРЅСЃС‚СЂСѓРєС†РёР№ С‚РёРїР° unique_ptr<Statement>
     //hooray variadic templates and perfect forwarding for those who might've got bored
     template <typename... Args>
     explicit Compound(Args&&... args) {
         DealWithArgs(std::forward<Args>(args)...);
     }
 
-    // Добавляет очередную инструкцию в конец составной инструкции
+    // Р”РѕР±Р°РІР»СЏРµС‚ РѕС‡РµСЂРµРґРЅСѓСЋ РёРЅСЃС‚СЂСѓРєС†РёСЋ РІ РєРѕРЅРµС† СЃРѕСЃС‚Р°РІРЅРѕР№ РёРЅСЃС‚СЂСѓРєС†РёРё
     void AddStatement(std::unique_ptr<Statement> stmt) {
         args_.push_back(std::move(stmt));
     }
 
-    // Последовательно выполняет добавленные инструкции. Возвращает None
+    // РџРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅРѕ РІС‹РїРѕР»РЅСЏРµС‚ РґРѕР±Р°РІР»РµРЅРЅС‹Рµ РёРЅСЃС‚СЂСѓРєС†РёРё. Р’РѕР·РІСЂР°С‰Р°РµС‚ None
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 
 private:
@@ -267,25 +267,23 @@ private:
         args_.push_back(std::move(stmt));
         DealWithArgs(std::forward<Args>(args)...);
     }
-    void DealWithArgs() {
-
-    }
+    void DealWithArgs() {}
 };
 
-// Тело метода. Как правило, содержит составную инструкцию
+// РўРµР»Рѕ РјРµС‚РѕРґР°. РљР°Рє РїСЂР°РІРёР»Рѕ, СЃРѕРґРµСЂР¶РёС‚ СЃРѕСЃС‚Р°РІРЅСѓСЋ РёРЅСЃС‚СЂСѓРєС†РёСЋ
 class MethodBody : public Statement {
 public:
     explicit MethodBody(std::unique_ptr<Statement>&& body);
 
-    // Вычисляет инструкцию, переданную в качестве body.
-    // Если внутри body была выполнена инструкция return, возвращает результат return
-    // В противном случае возвращает None
+    // Р’С‹С‡РёСЃР»СЏРµС‚ РёРЅСЃС‚СЂСѓРєС†РёСЋ, РїРµСЂРµРґР°РЅРЅСѓСЋ РІ РєР°С‡РµСЃС‚РІРµ body.
+    // Р•СЃР»Рё РІРЅСѓС‚СЂРё body Р±С‹Р»Р° РІС‹РїРѕР»РЅРµРЅР° РёРЅСЃС‚СЂСѓРєС†РёСЏ return, РІРѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ return
+    // Р’ РїСЂРѕС‚РёРІРЅРѕРј СЃР»СѓС‡Р°Рµ РІРѕР·РІСЂР°С‰Р°РµС‚ None
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 private:
     std::unique_ptr<Statement> body_;
 };
 
-// Выполняет инструкцию return с выражением statement
+// Р’С‹РїРѕР»РЅСЏРµС‚ РёРЅСЃС‚СЂСѓРєС†РёСЋ return СЃ РІС‹СЂР°Р¶РµРЅРёРµРј statement
 class Return : public Statement {
 public:
     explicit Return(std::unique_ptr<Statement> statement) 
@@ -293,30 +291,30 @@ public:
     {
     }
 
-    // Останавливает выполнение текущего метода. После выполнения инструкции return метод,
-    // внутри которого она была исполнена, должен вернуть результат вычисления выражения statement.
+    // РћСЃС‚Р°РЅР°РІР»РёРІР°РµС‚ РІС‹РїРѕР»РЅРµРЅРёРµ С‚РµРєСѓС‰РµРіРѕ РјРµС‚РѕРґР°. РџРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ РёРЅСЃС‚СЂСѓРєС†РёРё return РјРµС‚РѕРґ,
+    // РІРЅСѓС‚СЂРё РєРѕС‚РѕСЂРѕРіРѕ РѕРЅР° Р±С‹Р»Р° РёСЃРїРѕР»РЅРµРЅР°, РґРѕР»Р¶РµРЅ РІРµСЂРЅСѓС‚СЊ СЂРµР·СѓР»СЊС‚Р°С‚ РІС‹С‡РёСЃР»РµРЅРёСЏ РІС‹СЂР°Р¶РµРЅРёСЏ statement.
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 private:
     std::unique_ptr<Statement> statement_;
 };
 
-// Объявляет класс
+// РћР±СЉСЏРІР»СЏРµС‚ РєР»Р°СЃСЃ
 class ClassDefinition : public Statement {
 public:
-    // Гарантируется, что ObjectHolder содержит объект типа runtime::Class
+    // Р“Р°СЂР°РЅС‚РёСЂСѓРµС‚СЃСЏ, С‡С‚Рѕ ObjectHolder СЃРѕРґРµСЂР¶РёС‚ РѕР±СЉРµРєС‚ С‚РёРїР° runtime::Class
     explicit ClassDefinition(runtime::ObjectHolder cls);
 
-    // Создаёт внутри closure новый объект, совпадающий с именем класса и значением, переданным в
-    // конструктор
+    // РЎРѕР·РґР°С‘С‚ РІРЅСѓС‚СЂРё closure РЅРѕРІС‹Р№ РѕР±СЉРµРєС‚, СЃРѕРІРїР°РґР°СЋС‰РёР№ СЃ РёРјРµРЅРµРј РєР»Р°СЃСЃР° Рё Р·РЅР°С‡РµРЅРёРµРј, РїРµСЂРµРґР°РЅРЅС‹Рј РІ
+    // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 private:
     runtime::ObjectHolder cls_;
 };
 
-// Инструкция if <condition> <if_body> else <else_body>
+// РРЅСЃС‚СЂСѓРєС†РёСЏ if <condition> <if_body> else <else_body>
 class IfElse : public Statement {
 public:
-    // Параметр else_body может быть равен nullptr
+    // РџР°СЂР°РјРµС‚СЂ else_body РјРѕР¶РµС‚ Р±С‹С‚СЊ СЂР°РІРµРЅ nullptr
     IfElse(std::unique_ptr<Statement> condition, std::unique_ptr<Statement> if_body,
         std::unique_ptr<Statement> else_body);
 
@@ -327,17 +325,17 @@ private:
     std::unique_ptr<Statement> else_body_;
 };
 
-// Операция сравнения
+// РћРїРµСЂР°С†РёСЏ СЃСЂР°РІРЅРµРЅРёСЏ
 class Comparison : public BinaryOperation {
 public:
-    // Comparator задаёт функцию, выполняющую сравнение значений аргументов
+    // Comparator Р·Р°РґР°С‘С‚ С„СѓРЅРєС†РёСЋ, РІС‹РїРѕР»РЅСЏСЋС‰СѓСЋ СЃСЂР°РІРЅРµРЅРёРµ Р·РЅР°С‡РµРЅРёР№ Р°СЂРіСѓРјРµРЅС‚РѕРІ
     using Comparator = std::function<bool(const runtime::ObjectHolder&,
         const runtime::ObjectHolder&, runtime::Context&)>;
 
     Comparison(Comparator cmp, std::unique_ptr<Statement> lhs, std::unique_ptr<Statement> rhs);
 
-    // Вычисляет значение выражений lhs и rhs и возвращает результат работы comparator,
-    // приведённый к типу runtime::Bool
+    // Р’С‹С‡РёСЃР»СЏРµС‚ Р·РЅР°С‡РµРЅРёРµ РІС‹СЂР°Р¶РµРЅРёР№ lhs Рё rhs Рё РІРѕР·РІСЂР°С‰Р°РµС‚ СЂРµР·СѓР»СЊС‚Р°С‚ СЂР°Р±РѕС‚С‹ comparator,
+    // РїСЂРёРІРµРґС‘РЅРЅС‹Р№ Рє С‚РёРїСѓ runtime::Bool
     runtime::ObjectHolder Execute(runtime::Closure& closure, runtime::Context& context) override;
 private:
     Comparator comp_;

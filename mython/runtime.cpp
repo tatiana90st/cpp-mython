@@ -1,4 +1,4 @@
-#include "runtime.h"
+п»ї#include "runtime.h"
 
 #include <cassert>
 #include <optional>
@@ -18,7 +18,7 @@ void ObjectHolder::AssertIsValid() const {
 }
 
 ObjectHolder ObjectHolder::Share(Object& object) {
-    // Возвращаем невладеющий shared_ptr (его deleter ничего не делает)
+    // Р’РѕР·РІСЂР°С‰Р°РµРј РЅРµРІР»Р°РґРµСЋС‰РёР№ shared_ptr (РµРіРѕ deleter РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°РµС‚)
     return ObjectHolder(std::shared_ptr<Object>(&object, [](auto* /*p*/) { /* do nothing */ }));
 }
 
@@ -105,9 +105,6 @@ ObjectHolder ClassInstance::Call(const std::string& method,
     [[maybe_unused]] Context& context) {
 
     if (HasMethod(method, actual_args.size())) {
-        /*При вызове метода класса убедитесь, что ему передаётся объект с именем self, ссылающийся на экземпляр текущего класса.
-        Так метод класса сможет получить доступ к полям объекта.
-Используйте ObjectHolder::Share(*this), чтобы внутри метода ClassInstance::Call получить ObjectHolder, ссылающийся на текущий объект.*/
         Closure closure;
         closure["self"s] = ObjectHolder::Share(*this);
 
@@ -211,9 +208,6 @@ bool CompareValueObjects(const ObjectHolder& lhs, const ObjectHolder& rhs, Comp 
 }
 
 bool Equal(const ObjectHolder& lhs, const ObjectHolder& rhs, Context& context) {
-    /*Функция Equal возвращает true, если её аргументы содержат одинаковые числа, строки или логические значения, и false — если разные.
-    Если первый аргумент — экземпляр пользовательского класса с методом __eq__, функция возвращает результат вызова lhs.__eq__(rhs), приведённый к типу Bool.
-    Если оба аргумента имеют значение None, функция возвращает true. В остальных случаях выбрасывается исключение runtime_error.*/
     
     if (!lhs && !rhs) {
         return true;
@@ -228,16 +222,13 @@ bool Equal(const ObjectHolder& lhs, const ObjectHolder& rhs, Context& context) {
         }
     }
     else {
-        //return CompareValueObjectsEq(lhs, rhs);
         return CompareValueObjects(lhs, rhs, Eq());
     }
     throw std::runtime_error("Comparation error"s);
 }
 
 bool Less(const ObjectHolder& lhs, const ObjectHolder& rhs, Context& context) {
-    /*Функция Less для объектов, которые хранят строки, числа и логические значения, возвращает результат сравнения, используя оператор <.
-    Если первый аргумент — объект пользовательского класса с методом __lt__, функция возвращает результат вызова lhs.__lt__(rhs), приведённый к типу Bool.
-    В остальных случаях выбрасывается исключение runtime_error.*/
+
     if (ClassInstance* ptr = lhs.TryAs<ClassInstance>();
         ptr != nullptr) {
         if (ptr->HasMethod("__lt__"s, 1)) {
@@ -248,7 +239,6 @@ bool Less(const ObjectHolder& lhs, const ObjectHolder& rhs, Context& context) {
         }
     }
     else {
-        //return CompareValueObjectsLess(lhs, rhs);
         return CompareValueObjects(lhs, rhs, Le());
     }
     throw std::runtime_error("Cannot compare objects for less"s);
